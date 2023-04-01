@@ -62,13 +62,57 @@ html5 = driver5.page_source
 driver5.quit()
 
 driver6 = webdriver.Chrome(options=options)
-driver6.get('https://www.gettyimages.com/photos/celebrities?assettype=image&phrase=Celebrities&recency=last24hours&sort=newest&license=rf%2Crm&page=2')
+driver6.get('https://www.gettyimages.com/photos/celebrities?assettype=image&page=&phrase=Celebrities&recency=last24hours&sort=newest')
 time.sleep(6) 
 html6 = driver6.page_source 
 # 关闭浏览器
 driver6.quit()
 
-html = '\n\n'.join([html1, html2, html3, html4, html5, html6])
+
+driver7 = webdriver.Chrome(options=options)
+driver7.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Fashion&recency=last24hours&sort=newest')
+time.sleep(6) 
+html7 = driver7.page_source
+# 关闭浏览器
+driver7.quit()
+
+driver8 = webdriver.Chrome(options=options)
+driver8.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Actor&recency=last24hours&sort=newest')
+time.sleep(6) 
+html8 = driver8.page_source
+# 关闭浏览器
+driver8.quit()
+
+driver9 = webdriver.Chrome(options=options)
+driver9.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Concert&recency=last24hours&sort=newest')
+time.sleep(6) 
+html9 = driver9.page_source 
+# 关闭浏览器
+driver9.quit()
+
+
+driver10 = webdriver.Chrome(options=options)
+driver10.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Music&recency=last24hours&sort=newest')
+time.sleep(6) 
+html10 = driver10.page_source
+# 关闭浏览器
+driver10.quit()
+
+driver11 = webdriver.Chrome(options=options)
+driver11.get('https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Celebrities&recency=last24hours&sort=newest')
+time.sleep(6) 
+html11 = driver11.page_source
+# 关闭浏览器
+driver11.quit()
+
+driver12 = webdriver.Chrome(options=options)
+driver12.get('https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Celebrities&recency=last24hours&sort=newest')
+time.sleep(6) 
+html12 = driver12.page_source 
+# 关闭浏览器
+driver12.quit()
+
+html = '\n\n'.join([html1, html2, html3, html4, html5, html6, html7, html8, html9, html10, html11, html12])
 
 
 
