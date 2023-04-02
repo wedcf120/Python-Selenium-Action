@@ -30,13 +30,35 @@ urls = [
     'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Concert&recency=last24hours&sort=newest',
     'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Music&recency=last24hours&sort=newest',
     'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Celebrities&recency=last24hours&sort=newest',
-    'https://www.gettyimages.com/photos/celebrities?assettype=image&page=&phrase=Celebrities&recency=last24hours&sort=newest',
+  
     'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Fashion&recency=last24hours&sort=newest',
     'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Actor&recency=last24hours&sort=newest',
     'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Concert&recency=last24hours&sort=newest',
     'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Music&recency=last24hours&sort=newest',
+
+    'https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Fashion&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Actor&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Concert&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Music&recency=last24hours&sort=newest', 
     'https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Celebrities&recency=last24hours&sort=newest',
-    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Celebrities&recency=last24hours&sort=newest'
+
+    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Fashion&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Actor&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Concert&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Music&recency=last24hours&sort=newest', 
+    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Celebrities&recency=last24hours&sort=newest',
+  
+    'https://www.gettyimages.com/photos/people?assettype=image&page=5&phrase=Fashion&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=5&phrase=Actor&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=5&phrase=Concert&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=5&phrase=Music&recency=last24hours&sort=newest', 
+    'https://www.gettyimages.com/photos/people?assettype=image&page=5&phrase=Celebrities&recency=last24hours&sort=newest',
+  
+    'https://www.gettyimages.com/photos/people?assettype=image&page=6&phrase=Fashion&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=6&phrase=Actor&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=6&phrase=Concert&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=6&phrase=Music&recency=last24hours&sort=newest', 
+    'https://www.gettyimages.com/photos/people?assettype=image&page=6&phrase=Celebrities&recency=last24hours&sort=newest',
 ]
 
 # create an empty list to store the HTML sources
@@ -91,14 +113,22 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
     links = re.findall(regex_link, html)
     titles = re.findall(regex_tit, html)
 
+    # 使用set去重复link
+    unique_links = set(links)
+
     rss = ""
 
-    for i in range(len(links)):
-        link = re.sub(r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\"(.+?)\"', r'https://www.gettyimages.com\1', links[i])
-        title = re.sub(r'people\"\:\"([\s\S]{1,350})\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"', r'\1', titles[i])
+    for link in unique_links:
+        # 找到link对应的标题
+        index = links.index(link)
+        title = titles[index]
+
+        # 对link进行处理，生成article
+        link = re.sub(r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\"(.+?)\"', r'https://www.gettyimages.com\1', link)
         article = re.sub(r'.*detail\/news\-photo\/|news\-photo\/.*|\-', ' ', link)
         article = article.title()
 
+        # 如果标题中包含关键字，生成RSS item
         if re.search(r'\b(Justin Bieber|Timberlake|Nicki Minaj|Ryan Tedder|Ed Sheeran|Lana Del Rey|Katy Perry|Lawson|Drake|Selena Gomez|Dua Lipa|Birdy|Michael Bubl|Machine Gun Kelly|Jessie J|Lady Gaga|Jesse McCartney|Sufjan Stevens|Avicii|Christina Aguilera|Cardi B|Kanye West|Troye Sivan|Gwen Stefani|Lorde|Tinashe|Shawn Mendes|Madonna|Jennifer Lopez|Kesha|Usher|Jason Derulo|Doja Cat|Post Malone|Grimes|Lauv|Weeknd|Rita Ora|Adele|Liam Gallagher|Liam Payne|Mariah Carey|Alicia Keys|Carly Rae Jepsen|Norah Jones|Keane|Iggy Azaela|Lil Nas X|ZAYN|Joshua Bassett|Bruno Mars|Beyonc|Camila Cabello|Charli XCX|James Bay|Adam Lambert|Rihanna|Ariana Grande|Megan Thee Stallion|Charlie Puth|FKA twigs|SHAKIRA|Avril Lavigne|Damon Albarn|P!NK|ROSALÍA|Ellie Goulding|Eminem|SAM SMITH|Taylor Swift|Noel Gallagher|Miley Cyrus|Anitta|Shayne Ward|Halsey|Conan Gray|Travis Scott|Harry Styles|DJ Snake|NE-YO|Inna|Hozier|Meghan Trainor|Calvin Harris|Billie Eilish|Lily Collins|Anne Hathaway|Sydney Sweeney|Tom Holland|Zendaya|Blake Lively|Ryan Reynolds|Emilia Clarke|Megan Fox|Tom Hiddleston|Anya Taylor|Chalamet|Cara Delevingne|Rooney Mara|Matthew Perry|Kylie Jenner|Ana De Armas|Ben Affleck|Ashley Benson|Elizabeth Olsen|Kendall Jenner|Evan Peters|Saoirse Ronan|Charlize Theron|Kristen Stewart|Charlie Heaton|Lee Pace|Vanessa Kirby|Robert Downey|Ariel Winter|Gal Gadot|Ezra Miller|Jared Leto|Nicholas Hoult|Beth Behrs|Natalie Dormer|Jodie Comer|Niall Horan|Emmy Rossum|Emma Roberts|Alicia Vikander|Michael Fassbender|Richard Madden|Joe Alwyn|Karlie Kloss|Ruby Rose|Maisie Williams|Jason Momoa|Noah Schnapp|Sebastian Stan|Rami Malek|Chris Hemsworth|Andrew Garfield|Tom Hardy|Kim Kardashian|Chris Martin|Dakota Johnson|James McAvoy|Bella Hadid|Moretz|Tom Felton|Hugh Jackman|Chloe Bennet|Angelina Jolie|Chris Evans|Bill Sk|Matt Bomer|Eva Green|Cate Blanchett|Ian Somerhalder|Henry Cavill|Adam Levine|Scarlett Johansson|David Tennant|Amber Heard|Keanu Reeves|Halle Bailey|Rachel Brosnahan|Maxence Danet-Fauvel|Millie Bobby Brown|Jude Law|Nicole Kidman|Benedict Cumberbatch|Grant Gustin|Emma Dumont|Meryl Streep|Tom Cruise|Michael Sheen|Colin Firth|Madison Beer|Eddie Redmayne|Cillian Murphy|Callum Turner|Manu Rios|Emma Stone|Sandra Oh|Michelle Yeoh|Alexandra Daddario|Viggo Mortensen|Mads Mikkelsen|Andrew Garfield|Britney Spears|Mariah Carey|Mads Mikkelsen|Daniel Wu|Lalisa Manoban|Jensen Ackles|Daisy Edgar-Jones|Ryan Gosling|Brad Pitt|Imagine Dragons|Sydney Sweeney|Comic-Con|Dakota Johnson|Sadie Sink|Tilda Swinton|George Clooney|Julia Roberts|Jennifer Anist|Fashion Week|Yoo Ah|rosé)\b', title, flags=re.IGNORECASE):
             rss += f'''
                 <item>
@@ -112,6 +142,7 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         rss_feed = header + rss + footer
     else:
         rss_feed = f'{header}\n\t<item>\n\t\t<title>No articles found {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
+
 
     print(rss_feed)
 else:
