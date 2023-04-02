@@ -101,7 +101,7 @@ date = now.strftime("%m-%d")
 hour = now.strftime("%H")
 
 regex_link = r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"'
-regex_tit = r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"'
+regex_tit = r'people\"\:\"([\s\S]{1,350})\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"'
 regex_con = r'caption\"\:\"[\s\S]{1,350}\"\,\".+?people\"\:\"[\s\S]{1,350}\"\,"artist'
 
 header = '''<?xml version="1.0" encoding="utf-8"?>
@@ -135,7 +135,6 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
 
         # 对link进行处理，生成article
         link = re.sub(r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\"(.+?)\"', r'https://www.gettyimages.com\1', link)
-        title = re.sub(r'people\"\:\"([\s\S]{1,350})\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"', r'\1', titles)
         article = re.sub(r'.*detail\/news\-photo\/|news\-photo\/.*|\-', ' ', link)
         article = article.title()
 
