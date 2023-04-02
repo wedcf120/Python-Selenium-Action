@@ -58,12 +58,11 @@ html = '\n'.join(html_list)
 
 
 
-
 regex_link = r'desc\"\:\".{0,250}\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"[0-9]{19,23}\"\,'
 regex_tit = r'desc\"\:\".{0,250}\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"[0-9]{19,23}\"\,'
 regex_con = r'originCover\"\:\"(.+?)\"'
 regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
-regex_author = r'\"author\"\:\"(.+?)\"'
+regex_author = r'\}\,\"author\"\:\"(.+?)\"'
 
 header = '''<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="rss1.xsl"?>
@@ -94,7 +93,7 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         pubdate = re.sub(r'.*([0-9]{10}).*', r'\1', pubdate)
         dt = datetime.fromtimestamp(int(pubdate))
         formatted_date = dt.strftime('%a, %d %b %Y %H:%M:%S %z')
-        author = re.sub(r'\"author\"\:\"(.+?)\"', r'\1', author)
+        author = re.sub(r'\}\,\"author\"\:\"(.+?)\"', r'\1', author)
         link = re.sub(r'desc\"\:\"(.{0,250})\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"([0-9]{19,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\2', link)
         title = re.sub(r'desc\"\:\"(.{0,250})\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"([0-9]{19,23})\"\,', r'\1', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
