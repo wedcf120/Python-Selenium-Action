@@ -101,7 +101,7 @@ date = now.strftime("%m-%d")
 hour = now.strftime("%H")
 
 regex_link = r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"'
-regex_tit = r'people\"\:\"([\s\S]{1,350})\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"'
+regex_tit = r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"'
 regex_con = r'caption\"\:\"[\s\S]{1,350}\"\,\".+?people\"\:\"[\s\S]{1,350}\"\,"artist'
 
 header = '''<?xml version="1.0" encoding="utf-8"?>
@@ -131,10 +131,10 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
     for link in unique_links:
         # 找到link对应的标题
         index = links.index(link)
-        title = titles[index]
 
         # 对link进行处理，生成article
         link = re.sub(r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\"(.+?)\"', r'https://www.gettyimages.com\1', link)
+        title = re.sub(r'people\"\:\"([\s\S]{1,350})\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"', r'\1', titles[i])
         article = re.sub(r'.*detail\/news\-photo\/|news\-photo\/.*|\-', ' ', link)
         article = article.title()
 
@@ -159,5 +159,5 @@ else:
     rss = f'{header}\n\t<item>\n\t\t<title>Error, please check {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
     print(rss)
 
-with open('./getty.html', 'w', encoding='utf-8') as f:
-    f.write(rss_feed)
+#with open('./tiktok.xml', 'w', encoding='utf-8') as f:
+#    f.write(rss_feed)
