@@ -76,8 +76,19 @@ for url in urls:
         html_sources.append(html)
         driver.quit()
         print(f"Got HTML for URL: {url}")
+    except TimeoutException:
+        print(f"Timeout getting HTML for URL {url}, retrying...")
+        driver.quit()
+        driver = webdriver.Chrome(options=options)
+        driver.get(url)
+        time.sleep(6)
+        html = driver.page_source
+        html_sources.append(html)
+        driver.quit()
+        print(f"Got HTML for URL: {url} after retrying")
     except Exception as e:
         print(f"Error getting HTML for URL {url}: {e}")
+
 
 # join the HTML sources with two newline characters
 html = '\n\n'.join(html_sources)
@@ -125,6 +136,7 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
 
         # 对link进行处理，生成article
         link = re.sub(r'people\"\:\"[\s\S]{1,350}\"\,"artist[\s\S]{1,350}landingUrl\"\:\"(.+?)\"', r'https://www.gettyimages.com\1', link)
+        title = re.sub(r'people\"\:\"([\s\S]{1,350})\"\,"artist[\s\S]{1,350}landingUrl\"\:\".+?\"', r'\1', titles[i])
         article = re.sub(r'.*detail\/news\-photo\/|news\-photo\/.*|\-', ' ', link)
         article = article.title()
 
