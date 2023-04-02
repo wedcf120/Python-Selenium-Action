@@ -27,8 +27,10 @@ with open('users.txt', 'r') as f:
         user = user.strip()
         url = f'https://www.tiktok.com/@{user}'
         response = requests.get(url)
-        if response.status_code == 20000:
-            time.sleep(5)
+        if response.status_code == 200:
+            if 'videoQuality' not in response.text:
+                print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
+                continue
             html_list.append(response.text)
         else:
             try:
@@ -36,8 +38,12 @@ with open('users.txt', 'r') as f:
                 driver = webdriver.Chrome(options=options)
                 driver.set_page_load_timeout(15)
                 driver.get(url)
-                time.sleep(5)
-                html_list.append(driver.page_source)
+                time.sleep(1)
+                page_source = driver.page_source
+                if 'videoQuality' not in page_source:
+                    print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
+                    continue
+                html_list.append(page_source)
                 driver.quit()
             except Exception as e:
                 print(f"An exception occurred while scraping user {user}: {e}")
@@ -109,7 +115,7 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
     print(rss_feed)
 
 else:
-    rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查 {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
+    rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查 </title>\n\t\t<link>{url}#</link>\n\t</item>\n{footer}'
     print(rss)
 
 
