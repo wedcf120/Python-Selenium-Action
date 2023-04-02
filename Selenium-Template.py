@@ -21,99 +21,44 @@ options.add_argument('--no-sandbox')                # 解决DevToolsActivePort�
 options.add_argument('--disable-gpu')               # 谷歌文档提到需要加上这个属性来规避bug
 options.add_argument('--hide-scrollbars')           # 隐藏滚动条，应对一些特殊页面
 options.add_argument("--headless") #无界面
+options.set_page_load_timeout(20)  #超时时间20秒
 
 
 
+urls = [
+    'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Fashion&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Actor&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Concert&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Music&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Celebrities&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/celebrities?assettype=image&page=&phrase=Celebrities&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Fashion&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Actor&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Concert&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Music&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Celebrities&recency=last24hours&sort=newest',
+    'https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Celebrities&recency=last24hours&sort=newest'
+]
 
-driver1 = webdriver.Chrome(options=options)
-driver1.get('https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Fashion&recency=last24hours&sort=newest')
-time.sleep(6) 
-html1 = driver1.page_source
-# 关闭浏览器
-driver1.quit()
-
-driver2 = webdriver.Chrome(options=options)
-driver2.get('https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Actor&recency=last24hours&sort=newest')
-time.sleep(6) 
-html2 = driver2.page_source
-# 关闭浏览器
-driver2.quit()
-
-driver3 = webdriver.Chrome(options=options)
-driver3.get('https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Concert&recency=last24hours&sort=newest')
-time.sleep(6) 
-html3 = driver3.page_source 
-# 关闭浏览器
-driver3.quit()
+# create an empty list to store the HTML sources
+html_sources = []
 
 
-driver4 = webdriver.Chrome(options=options)
-driver4.get('https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Music&recency=last24hours&sort=newest')
-time.sleep(6) 
-html4 = driver4.page_source
-# 关闭浏览器
-driver4.quit()
+# iterate over the URLs and get the HTML source
+for url in urls:
+    try:
+        driver = webdriver.Chrome(options=options)
+        driver.get(url)
+        time.sleep(6)
+        html = driver.page_source
+        html_sources.append(html)
+        driver.quit()
+        print(f"Got HTML for URL: {url}")
+    except Exception as e:
+        print(f"Error getting HTML for URL {url}: {e}")
 
-driver5 = webdriver.Chrome(options=options)
-driver5.get('https://www.gettyimages.com/photos/people?assettype=image&page=1&phrase=Celebrities&recency=last24hours&sort=newest')
-time.sleep(6) 
-html5 = driver5.page_source
-# 关闭浏览器
-driver5.quit()
-
-driver6 = webdriver.Chrome(options=options)
-driver6.get('https://www.gettyimages.com/photos/celebrities?assettype=image&page=&phrase=Celebrities&recency=last24hours&sort=newest')
-time.sleep(6) 
-html6 = driver6.page_source 
-# 关闭浏览器
-driver6.quit()
-
-
-driver7 = webdriver.Chrome(options=options)
-driver7.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Fashion&recency=last24hours&sort=newest')
-time.sleep(6) 
-html7 = driver7.page_source
-# 关闭浏览器
-driver7.quit()
-
-driver8 = webdriver.Chrome(options=options)
-driver8.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Actor&recency=last24hours&sort=newest')
-time.sleep(6) 
-html8 = driver8.page_source
-# 关闭浏览器
-driver8.quit()
-
-driver9 = webdriver.Chrome(options=options)
-driver9.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Concert&recency=last24hours&sort=newest')
-time.sleep(6) 
-html9 = driver9.page_source 
-# 关闭浏览器
-driver9.quit()
-
-
-driver10 = webdriver.Chrome(options=options)
-driver10.get('https://www.gettyimages.com/photos/people?assettype=image&page=2&phrase=Music&recency=last24hours&sort=newest')
-time.sleep(6) 
-html10 = driver10.page_source
-# 关闭浏览器
-driver10.quit()
-
-driver11 = webdriver.Chrome(options=options)
-driver11.get('https://www.gettyimages.com/photos/people?assettype=image&page=3&phrase=Celebrities&recency=last24hours&sort=newest')
-time.sleep(6) 
-html11 = driver11.page_source
-# 关闭浏览器
-driver11.quit()
-
-driver12 = webdriver.Chrome(options=options)
-driver12.get('https://www.gettyimages.com/photos/people?assettype=image&page=4&phrase=Celebrities&recency=last24hours&sort=newest')
-time.sleep(6) 
-html12 = driver12.page_source 
-# 关闭浏览器
-driver12.quit()
-
-html = '\n\n'.join([html1, html2, html3, html4, html5, html6, html7, html8, html9, html10, html11, html12])
-
+# join the HTML sources with two newline characters
+html = '\n\n'.join(html_sources)
 
 
 
