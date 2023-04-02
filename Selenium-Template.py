@@ -21,7 +21,6 @@ options.add_argument('--no-sandbox')                # 解决DevToolsActivePort�
 options.add_argument('--disable-gpu')               # 谷歌文档提到需要加上这个属性来规避bug
 options.add_argument('--hide-scrollbars')           # 隐藏滚动条，应对一些特殊页面
 options.add_argument("--headless") #无界面
-options.set_page_load_timeout(20)  #超时时间20秒
 
 
 
@@ -48,6 +47,7 @@ html_sources = []
 for url in urls:
     try:
         driver = webdriver.Chrome(options=options)
+        driver.set_page_load_timeout(20)
         driver.get(url)
         time.sleep(6)
         html = driver.page_source
