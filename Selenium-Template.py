@@ -27,7 +27,7 @@ with open('users.txt', 'r') as f:
         user = user.strip()
         url = f'https://www.tiktok.com/@{user}'
         response = requests.get(url)
-        if response.status_code == 200:
+        if response.status_code == 200000000000:
             html_list.append(response.text)
         else:
             try:
