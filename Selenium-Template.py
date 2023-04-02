@@ -27,7 +27,7 @@ with open('users.txt', 'r') as f:
         user = user.strip()
         url = f'https://www.tiktok.com/@{user}'
         response = requests.get(url)
-        if response.status_code == 200000000000:
+        if response.status_code == 200:
             html_list.append(response.text)
         else:
             try:
@@ -35,7 +35,7 @@ with open('users.txt', 'r') as f:
                 driver = webdriver.Chrome(options=options)
                 driver.set_page_load_timeout(15)
                 driver.get(url)
-                time.sleep(5)
+                time.sleep(1)
                 html_list.append(driver.page_source)
                 driver.quit()
             except Exception as e:
@@ -54,9 +54,10 @@ html = '\n'.join(html_list)
 
 
 regex_link = r'id\"\:\"[0-9]{19,23}\"\,\"desc\"\:\".+?\"\,\"createTime'
-regex_tit = r'id\"\:\"[0-9]{19,23}\"\,\"desc\"\:\".+?\"\,\"createTime'
+regex_tit = r'id\"\:\"[0-9]{19,23}\"\,\"desc\"\:\".{0,300}\"\,\"createTime'
 regex_con = r'originCover\"\:\"(.+?)\"'
 regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
+regex_author = r'\"author\"\:\"(.+?)\"'
 
 header = '''<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="rss1.xsl"?>
@@ -70,28 +71,27 @@ header = '''<?xml version="1.0" encoding="utf-8"?>
 
 footer = '</channel></rss>'
 
-
-
 if re.findall(regex_link, html) and re.findall(regex_tit, html):
     links = re.findall(regex_link, html)
     titles = re.findall(regex_tit, html)
     articles = re.findall(regex_con, html)
     pubdates = re.findall(regex_pubdate, html)
+    authors = re.findall(regex_author, html)
 
     # 将文章按发布时间从新到旧排序
-    sorted_articles = sorted(zip(pubdates, links, titles, articles), reverse=True)
+    sorted_articles = sorted(zip(pubdates, links, titles, articles, authors), reverse=True)
 
     rss = ""
 
-    # 只保留最新的5个文章
-    for pubdate, link, title, article in sorted_articles[:50]:
+    # 只保留最新的50个文章
+    for pubdate, link, title, article, author in sorted_articles[:50]:
         pubdate = re.sub(r'.*([0-9]{10}).*', r'\1', pubdate)
         dt = datetime.fromtimestamp(int(pubdate))
         formatted_date = dt.strftime('%a, %d %b %Y %H:%M:%S %z')
-        link = re.sub(r'id\"\:\"([0-9]{19,23})\"\,\"desc\"\:\"(.+?)\"\,\"createTime', r'https://www.tiktok.com/@enola.bedard/video/\1', link)
-        title = re.sub(r'id\"\:\"([0-9]{19,23})\"\,\"desc\"\:\"(.+?)\"\,\"createTime', r'\2', title.encode('utf-8').decode('unicode_escape'))
+        author = re.sub(r'\"author\"\:\"(.+?)\"', r'\1', author)
+        link = re.sub(r'id\"\:\"([0-9]{19,23})\"\,\"desc\"\:\"(.+?)\"\,\"createTime', r'https://www.tiktok.com/' + author + r'/video/\1', link)
+        title = re.sub(r'id\"\:\"([0-9]{19,23})\"\,\"desc\"\:\"(.{0,300})\"\,\"createTime', r'\2', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
-        author = re.sub(r'.*\/\@(.+?)\/video.*', r'\1', link)
         rss += f'''
                 <item>
                 <title><![CDATA[{title}]]]></title>
@@ -105,11 +105,13 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
 
     rss_feed = header + rss + footer
 
-    #print(rss_feed)
+    print(rss_feed)
 
 else:
     rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查 {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
     print(rss)
+
+
 
 with open('./tiktok.xml', 'w', encoding='utf-8') as f:
     f.write(rss_feed)
