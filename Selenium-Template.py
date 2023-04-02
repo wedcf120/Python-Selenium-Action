@@ -154,21 +154,25 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         article = re.sub(r'.*detail\/news\-photo\/|news\-photo\/.*|\-', ' ', link)
         article = article.title()
 
-        rss += f'''
+        if re.search(r'\b(Justin Bieber|Timberlake|Nicki Minaj|Ryan Tedder|Ed Sheeran|Lana Del Rey|Katy Perry|Lawson|Drake|Selena Gomez|Dua Lipa|Birdy|Michael Bubl|Machine Gun Kelly|Jessie J|Lady Gaga|Jesse McCartney|Sufjan Stevens|Avicii|Christina Aguilera|Cardi B|Kanye West|Troye Sivan|Gwen Stefani|Lorde|Tinashe|Shawn Mendes|Madonna|Jennifer Lopez|Kesha|Usher|Jason Derulo|Doja Cat|Post Malone|Grimes|Lauv|Weeknd|Rita Ora|Adele|Liam Gallagher|Liam Payne|Mariah Carey|Alicia Keys|Carly Rae Jepsen|Norah Jones|Keane|Iggy Azaela|Lil Nas X|ZAYN|Joshua Bassett|Bruno Mars|Beyonc|Camila Cabello|Charli XCX|James Bay|Adam Lambert|Rihanna|Ariana Grande|Megan Thee Stallion|Charlie Puth|FKA twigs|SHAKIRA|Avril Lavigne|Damon Albarn|P!NK|ROSALÍA|Ellie Goulding|Eminem|SAM SMITH|Taylor Swift|Noel Gallagher|Miley Cyrus|Anitta|Shayne Ward|Halsey|Conan Gray|Travis Scott|Harry Styles|DJ Snake|NE-YO|Inna|Hozier|Meghan Trainor|Calvin Harris|Billie Eilish|Lily Collins|Anne Hathaway|Sydney Sweeney|Tom Holland|Zendaya|Blake Lively|Ryan Reynolds|Emilia Clarke|Megan Fox|Tom Hiddleston|Anya Taylor|Chalamet|Cara Delevingne|Rooney Mara|Matthew Perry|Kylie Jenner|Ana De Armas|Ben Affleck|Ashley Benson|Elizabeth Olsen|Kendall Jenner|Evan Peters|Saoirse Ronan|Charlize Theron|Kristen Stewart|Charlie Heaton|Lee Pace|Vanessa Kirby|Robert Downey|Ariel Winter|Gal Gadot|Ezra Miller|Jared Leto|Nicholas Hoult|Beth Behrs|Natalie Dormer|Jodie Comer|Niall Horan|Emmy Rossum|Emma Roberts|Alicia Vikander|Michael Fassbender|Richard Madden|Joe Alwyn|Karlie Kloss|Ruby Rose|Maisie Williams|Jason Momoa|Noah Schnapp|Sebastian Stan|Rami Malek|Chris Hemsworth|Andrew Garfield|Tom Hardy|Kim Kardashian|Chris Martin|Dakota Johnson|James McAvoy|Bella Hadid|Moretz|Tom Felton|Hugh Jackman|Chloe Bennet|Angelina Jolie|Chris Evans|Bill Sk|Matt Bomer|Eva Green|Cate Blanchett|Ian Somerhalder|Henry Cavill|Adam Levine|Scarlett Johansson|David Tennant|Amber Heard|Keanu Reeves|Halle Bailey|Rachel Brosnahan|Maxence Danet-Fauvel|Millie Bobby Brown|Jude Law|Nicole Kidman|Benedict Cumberbatch|Grant Gustin|Emma Dumont|Meryl Streep|Tom Cruise|Michael Sheen|Colin Firth|Madison Beer|Eddie Redmayne|Cillian Murphy|Callum Turner|Manu Rios|Emma Stone|Sandra Oh|Michelle Yeoh|Alexandra Daddario|Viggo Mortensen|Mads Mikkelsen|Andrew Garfield|Britney Spears|Mariah Carey|Mads Mikkelsen|Daniel Wu|Lalisa Manoban|Jensen Ackles|Daisy Edgar-Jones|Ryan Gosling|Brad Pitt|Imagine Dragons|Sydney Sweeney|Comic-Con|Dakota Johnson|Sadie Sink|Tilda Swinton|George Clooney|Julia Roberts|Jennifer Anist|Fashion Week|Yoo Ah|rosé)\b', title, flags=re.IGNORECASE):
+            rss += f'''
                 <item>
-                <title><![CDATA[{title}【{article}]]]></title>
+                <title><![CDATA[{title}【{article}】]]]></title>
                 <link><![CDATA[{link}]]></link>
                 <description><![CDATA[{article}]]></description>
                 </item>
-
                 '''
 
-    rss_feed = header + rss + footer
+    if rss:
+        rss_feed = header + rss + footer
+    else:
+        rss_feed = f'{header}\n\t<item>\n\t\t<title>No articles found {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
 
     print(rss_feed)
 else:
-    rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查 {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
+    rss = f'{header}\n\t<item>\n\t\t<title>Error, please check {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
     print(rss)
 
 with open('./getty.html', 'w', encoding='utf-8') as f:
     f.write(rss_feed)
+
