@@ -51,10 +51,7 @@ with open('users.txt', 'r') as f:
 html = '\n'.join(html_list)
 
 
-#print(html)
-#exit()
-with open('./tiktok.html', 'w', encoding='utf-8') as f:
-    f.write(html)
+
 
 
 
