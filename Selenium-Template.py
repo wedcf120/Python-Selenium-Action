@@ -111,5 +111,5 @@ else:
     rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查 {date}-{hour}</title>\n\t\t<link>{url}#{date}-{hour}</link>\n\t</item>\n{footer}'
     print(rss)
 
-#with open('./tiktok.xml', 'w', encoding='utf-8') as f:
-#    f.write(rss)
+with open('./tiktok.xml', 'w', encoding='utf-8') as f:
+    f.write(rss)
