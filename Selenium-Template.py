@@ -50,8 +50,11 @@ with open('users.txt', 'r') as f:
 
 html = '\n'.join(html_list)
 
+
 #print(html)
 #exit()
+with open('./tiktok.html', 'w', encoding='utf-8') as f:
+    f.write(html)
 
 
 
@@ -59,9 +62,8 @@ html = '\n'.join(html_list)
 
 
 
-
-regex_link = r'id\"\:\"[0-9]{19,23}\"\,\"desc\"\:\".+?\"\,\"createTime'
-regex_tit = r'id\"\:\"[0-9]{19,23}\"\,\"desc\"\:\".{0,300}\"\,\"createTime'
+regex_link = r'desc\"\:\".{0,250}\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"[0-9]{19,23}\"\,'
+regex_tit = r'desc\"\:\".{0,250}\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"[0-9]{19,23}\"\,'
 regex_con = r'originCover\"\:\"(.+?)\"'
 regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
 regex_author = r'\"author\"\:\"(.+?)\"'
@@ -96,8 +98,8 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         dt = datetime.fromtimestamp(int(pubdate))
         formatted_date = dt.strftime('%a, %d %b %Y %H:%M:%S %z')
         author = re.sub(r'\"author\"\:\"(.+?)\"', r'\1', author)
-        link = re.sub(r'id\"\:\"([0-9]{19,23})\"\,\"desc\"\:\"(.+?)\"\,\"createTime', r'https://www.tiktok.com/' + author + r'/video/\1', link)
-        title = re.sub(r'id\"\:\"([0-9]{19,23})\"\,\"desc\"\:\"(.{0,300})\"\,\"createTime', r'\2', title.encode('utf-8').decode('unicode_escape'))
+        link = re.sub(r'desc\"\:\"(.{0,250})\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"([0-9]{19,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\2', link)
+        title = re.sub(r'desc\"\:\"(.{0,250})\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"([0-9]{19,23})\"\,', r'\1', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
         rss += f'''
                 <item>
@@ -115,10 +117,9 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
     print(rss_feed)
 
 else:
-    rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查 </title>\n\t\t<link>{url}#</link>\n\t</item>\n{footer}'
+    rss = f'{header}\n\t<item>\n\t\t<title>出错，请检查</title>\n\t\t<link></link>\n\t</item>\n{footer}'
     print(rss)
-
-
-
+    
 with open('./tiktok.xml', 'w', encoding='utf-8') as f:
     f.write(rss_feed)
+
