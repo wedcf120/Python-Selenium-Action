@@ -27,7 +27,8 @@ with open('users.txt', 'r') as f:
         user = user.strip()
         url = f'https://www.tiktok.com/@{user}'
         response = requests.get(url)
-        if response.status_code == 200:
+        if response.status_code == 20000:
+            time.sleep(5)
             html_list.append(response.text)
         else:
             try:
@@ -35,7 +36,7 @@ with open('users.txt', 'r') as f:
                 driver = webdriver.Chrome(options=options)
                 driver.set_page_load_timeout(15)
                 driver.get(url)
-                time.sleep(1)
+                time.sleep(5)
                 html_list.append(driver.page_source)
                 driver.quit()
             except Exception as e:
