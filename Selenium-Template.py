@@ -27,7 +27,7 @@ with open('users.txt', 'r') as f:
         user = user.strip()
         url = f'https://www.tiktok.com/@{user}'
         response = requests.get(url)
-        if response.status_code == 2000:
+        if response.status_code == 200:
             if 'videoQuality' not in response.text:
                 print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
                 continue
@@ -58,8 +58,8 @@ html = '\n'.join(html_list)
 
 
 
-regex_link = r'desc\"\:\".{0,250}\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"[0-9]{19,23}\"\,'
-regex_tit = r'desc\"\:\".{0,250}\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"[0-9]{19,23}\"\,'
+regex_link = r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"[0-9]{10,23}\"\,'
+regex_tit = r'contents\"\:\[\{\"desc\"\:\".+?\",'
 regex_con = r'originCover\"\:\"(.+?)\"'
 regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
 regex_author = r'\}\,\"author\"\:\"(.+?)\"'
@@ -94,8 +94,8 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         dt = datetime.fromtimestamp(int(pubdate))
         formatted_date = dt.strftime('%a, %d %b %Y %H:%M:%S %z')
         author = re.sub(r'\}\,\"author\"\:\"(.+?)\"', r'\1', author)
-        link = re.sub(r'desc\"\:\"(.{0,250})\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"([0-9]{19,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\2', link)
-        title = re.sub(r'desc\"\:\"(.{0,250})\"\,\"createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id":"([0-9]{19,23})\"\,', r'\1', title.encode('utf-8').decode('unicode_escape'))
+        link = re.sub(r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"([0-9]{10,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\1', link)
+        title = re.sub(r'contents\"\:\[\{\"desc\"\:\"(.+?)\"', r'\1', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
         rss += f'''
                 <item>
