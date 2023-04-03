@@ -38,7 +38,7 @@ with open('users.txt', 'r') as f:
                 driver = webdriver.Chrome(options=options)
                 driver.set_page_load_timeout(15)
                 driver.get(url)
-                time.sleep(1)
+                time.sleep(5)
                 page_source = driver.page_source
                 if 'videoQuality' not in page_source:
                     print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
@@ -59,7 +59,7 @@ html = '\n'.join(html_list)
 
 
 regex_link = r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"[0-9]{10,23}\"\,'
-regex_tit = r'contents\"\:\[\{\"desc\"\:\".+?\",'
+regex_tit = r'contents\"\:\[\{\"desc\"\:\".*?\",'
 regex_con = r'originCover\"\:\"(.+?)\"'
 regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
 regex_author = r'\}\,\"author\"\:\"(.+?)\"'
@@ -95,7 +95,7 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         formatted_date = dt.strftime('%a, %d %b %Y %H:%M:%S %z')
         author = re.sub(r'\}\,\"author\"\:\"(.+?)\"', r'\1', author)
         link = re.sub(r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"([0-9]{10,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\1', link)
-        title = re.sub(r'contents\"\:\[\{\"desc\"\:\"(.+?)\"', r'\1', title.encode('utf-8').decode('unicode_escape'))
+        title = re.sub(r'contents\"\:\[\{\"desc\"\:\"(.*?)\"', r'\1', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
         rss += f'''
                 <item>
