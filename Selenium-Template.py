@@ -27,7 +27,7 @@ with open('users.txt', 'r') as f:
         user = user.strip()
         url = f'https://www.tiktok.com/@{user}'
         response = requests.get(url)
-        if response.status_code == 2000:
+        if response.status_code == 200:
             if 'videoQuality' not in response.text:
                 print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
                 continue
