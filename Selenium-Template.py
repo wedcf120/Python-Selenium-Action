@@ -62,7 +62,7 @@ five_days_ago = now - timedelta(days=5)
 
 
 
-regex_link = r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"[0-9]{10,23}\"\,'
+regex_link = r'scheduleTime.+?\"video\"\:\{\"id\"\:\"[0-9]{10,23}\"\,'
 regex_tit = r'contents\"\:\[\{\"desc\"\:\".*?\",'
 regex_con = r'originCover\"\:\"(.+?)\"'
 regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
@@ -98,7 +98,7 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         dt = datetime.fromtimestamp(int(pubdate))
         formatted_date = dt.strftime('%a, %d %b %Y %H:%M:%S %z')
         author = re.sub(r'\}\,\"author\"\:\"(.+?)\"', r'\1', author)
-        link = re.sub(r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"([0-9]{10,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\1', link)
+        link = re.sub(r'scheduleTime.+?\"video\"\:\{\"id\"\:\"[0-9]{10,23}\"\,', r'https://www.tiktok.com/@' + author + r'/video/\1', link)
         title = re.sub(r'contents\"\:\[\{\"desc\"\:\"(.*?)\"', r'\1', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
         if dt >= five_days_ago:
@@ -123,3 +123,4 @@ else:
     
 with open('./tiktok.xml', 'w', encoding='utf-8') as f:
     f.write(rss_feed)
+
