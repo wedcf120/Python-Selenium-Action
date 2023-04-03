@@ -6,7 +6,7 @@ import re
 import requests
 import os
 import datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # 安装最新版的chromedriver
 chromedriver_autoinstaller.install()
@@ -54,7 +54,11 @@ html = '\n'.join(html_list)
 
 
 
+# Get the current time
+now = datetime.now()
 
+# Only include articles from the past 5 days
+five_days_ago = now - timedelta(days=5)
 
 
 
@@ -97,7 +101,8 @@ if re.findall(regex_link, html) and re.findall(regex_tit, html):
         link = re.sub(r'createTime\"\:\".+?\"\,\"scheduleTime.+?\"video\"\:\{\"id\"\:\"([0-9]{10,23})\"\,', r'https://www.tiktok.com/@' + author + r'/video/\1', link)
         title = re.sub(r'contents\"\:\[\{\"desc\"\:\"(.*?)\"', r'\1', title.encode('utf-8').decode('unicode_escape'))
         article = re.sub(r'originCover\"\:\"(.+?)\"', '\1', article.encode('utf-8').decode('unicode_escape'))
-        rss += f'''
+        if dt >= five_days_ago:
+          rss += f'''
                 <item>
                 <title><![CDATA[{title}]]]></title>
                 <link><![CDATA[{link}]]></link>
@@ -118,4 +123,3 @@ else:
     
 with open('./tiktok.xml', 'w', encoding='utf-8') as f:
     f.write(rss_feed)
-
