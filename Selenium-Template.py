@@ -52,7 +52,7 @@ with open('users.txt', 'r') as f:
         now = datetime.now()
 
         # Only include articles from the past 100 days
-        five_days_ago = now - timedelta(days=100)
+        five_days_ago = now - timedelta(days=365)
 
 
 
