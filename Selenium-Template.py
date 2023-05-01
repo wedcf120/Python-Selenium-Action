@@ -65,7 +65,7 @@ with open('users.txt', 'r') as f:
         header = f'''<?xml version="1.0" encoding="UTF-8"?>
 <rss  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tiktok @ {user}</title>
+        <title>Tiktok @{user}</title>
         <link>https://tiktok.com</link>
         <atom:link href="https://tiktok.com" rel="self" type="application/rss+xml" />
  '''
