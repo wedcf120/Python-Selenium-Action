@@ -62,10 +62,10 @@ with open('users.txt', 'r') as f:
         regex_pubdate = r'\"createTime\"\:\"[0-9]{7,20}\"\,\"scheduleTime'
         regex_author = r'\}\,\"author\"\:\"(.+?)\"'
 
-        header = '''<?xml version="1.0" encoding="UTF-8"?>
+        header = f'''<?xml version="1.0" encoding="UTF-8"?>
 <rss  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tiktok @''' + user + '''</title>
+        <title>Tiktok @ {user}</title>
         <link>https://tiktok.com</link>
         <atom:link href="https://tiktok.com" rel="self" type="application/rss+xml" />
  '''
@@ -116,6 +116,5 @@ with open('users.txt', 'r') as f:
             rss_feed = f'{header}\n\t<item>\n\t\t<title>{user}出错，请检查 {formatted_date}</title>\n\t\t<link>https://www.tiktok.com/@{user}#{formatted_date}</link>\n\t</item>\n{footer}'
             print(rss_feed)
     
-        with open('./' + user + '-tiktok.xml', 'w', encoding='utf-8') as f:
+        with open(f'./{user}-tiktok.xml', 'w', encoding='utf-8') as f:
             f.write(rss_feed)
-
