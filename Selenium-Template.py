@@ -109,12 +109,13 @@ with open('users.txt', 'r') as f:
             rss_feed = header + rss + footer
 
             print(rss_feed)
+            with open(f'./{user}-tiktok.xml', 'w', encoding='utf-8') as f:
+               f.write(rss_feed)
 
         else:
             now = datetime.now()
             formatted_date = now.strftime('%Y-%m-%d %H')
             rss_feed = f'{header}\n\t<item>\n\t\t<title>{user}出错，请检查 {formatted_date}</title>\n\t\t<link>https://www.tiktok.com/@{user}#{formatted_date}</link>\n\t</item>\n{footer}'
             print(rss_feed)
-    
-        with open(f'./{user}-tiktok.xml', 'w', encoding='utf-8') as f:
-            f.write(rss_feed)
+            with open(f'./{user}-tiktok.xml', 'w', encoding='utf-8') as f:
+               f.write(rss_feed)
