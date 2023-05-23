@@ -39,6 +39,7 @@ with open('users.txt', 'r') as f:
                 driver.get(url)
                 time.sleep(15)
                 page_source = driver.page_source
+                print(page_source)
                 if '' not in page_source:
                     print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
                     continue
