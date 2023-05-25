@@ -114,7 +114,7 @@ with open('users.txt', 'r') as f:
             with open(f'./temp/{author}-tiktok.html', 'w', encoding='utf-8') as f:
                f.write(html)
 
-        elif len(html) > 0:
+        elif user == author:
             now = datetime.now()
             formatted_date = now.strftime('%Y-%m-%d %H')
             rss_feed = f'{header}\n\t<item>\n\t\t<title>{author}出错，请检查 {formatted_date}</title>\n\t\t<link>https://www.tiktok.com/@{author}#{formatted_date}</link>\n\t</item>\n{footer}'
