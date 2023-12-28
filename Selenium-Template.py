@@ -37,8 +37,10 @@ with open('users.txt', 'r') as f:
                 driver = webdriver.Chrome(options=options)
                 driver.set_page_load_timeout(15)
                 driver.get(url)
-                time.sleep(60)
+                time.sleep(20)
                 page_source = driver.page_source
+                print(page_source)
+                exit()
                 if '' not in page_source:
                     print(f"An error occurred while scraping user {user}: page source does not contain 'videoQuality'")
                     continue
